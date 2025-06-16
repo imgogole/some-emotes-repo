@@ -90,6 +90,8 @@ namespace SomeEmotesREPO
             // set the textures from the character
             emoteLauncher.InitTexturesFrom(player.playerAvatar.transform.parent.gameObject);
 
+            SomeEmotesREPO.Logger.LogInfo($"Emote created of {player.playerAvatarScript.playerAvatarVisuals.playerAvatar.photonView.Owner.NickName}");
+
             return emoteLauncher;
         }
 

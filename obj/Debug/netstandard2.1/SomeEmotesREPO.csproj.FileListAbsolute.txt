@@ -5,4 +5,5 @@ C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.G
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.AssemblyInfoInputs.cache
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.AssemblyInfo.cs
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.csproj.CoreCompileInputs.cache
+C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.sourcelink.json
 C:\Users\imgog\Desktop\Mod REPO Emotes\obj\Debug\netstandard2.1\SomeEmotesREPO.dll

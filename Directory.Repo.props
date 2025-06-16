@@ -1,0 +1,7 @@
+<Project>
+  <PropertyGroup>
+    <GameDirectory>C:\Program Files (x86)\Steam\steamapps\common\REPO\</GameDirectory>
+    <TmmProfileName>Default</TmmProfileName>
+    <BepInExDirectory>$(AppData)\Thunderstore Mod Manager\DataFolder\REPO\profiles\$(TmmProfileName)\BepInEx</BepInExDirectory>
+  </PropertyGroup>
+</Project>

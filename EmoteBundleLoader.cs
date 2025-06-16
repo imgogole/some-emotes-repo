@@ -16,12 +16,12 @@ namespace SomeEmotesREPO
                 emoteBundle = AssetBundle.LoadFromFile(path);
                 if (emoteBundle == null)
                 {
-                    Debug.LogError("Échec de chargement de l’AssetBundle !");
+                    SomeEmotesREPO.Logger.LogError("EmoteBundle is not found");
                 }
             }
             else
             {
-                Debug.Log("[EmoteBundleLoader] Bundle déjà chargé, réutilisation.");
+                //good
             }
 
             return emoteBundle;
@@ -33,7 +33,6 @@ namespace SomeEmotesREPO
             {
                 emoteBundle.Unload(true);
                 emoteBundle = null;
-                Debug.Log("[EmoteBundleLoader] Bundle déchargé.");
             }
         }
 

@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace SomeEmotesREPO
 {
-    [RequireComponent(typeof(Animator))]
     public class EmoteSystem : MonoBehaviourPun, IPunObservable
     {
         private bool isEmoting = false;

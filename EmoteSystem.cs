@@ -55,10 +55,10 @@ namespace SomeEmotesREPO
 
         private Transform camTransform;
 
-        private PlayerController playerController;
+        private PlayerAvatar playerAvatar;
         private PlayerAvatarVisuals playerVisuals;
 
-        private static Vector3 camOffset = new Vector3(0f, 0f, -3.5f);
+        private static Vector3 camOffset = new Vector3(0f, 0f, -3.25f);
 
         private static EmoteSystem instance;
         public static EmoteSystem Instance => instance;
@@ -78,9 +78,9 @@ namespace SomeEmotesREPO
             if (Camera.main != null) camTransform = Camera.main.transform;
         }
 
-        public void SetPlayerController(PlayerController pc)
+        public void SetPlayerAvatar(PlayerAvatar pa)
         {
-            playerController = pc;
+            playerAvatar = pa;
             StartCoroutine(SetVisuals());
         }
 
@@ -88,10 +88,15 @@ namespace SomeEmotesREPO
         {
             yield return new WaitForSeconds(0.75f);
 
-            if (playerController.playerAvatarScript != null)
-                playerVisuals = playerController.playerAvatarScript.playerAvatarVisuals;
-            if (playerVisuals == null)
-                playerVisuals = playerController.GetComponentInChildren<PlayerAvatarVisuals>();
+            if (playerAvatar != null)
+            {
+                playerVisuals = playerAvatar.playerAvatarVisuals;
+                if (playerVisuals == null)
+                {
+                    playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
+                }
+            }
+
 
             if (PV.IsMine)
             {
@@ -100,7 +105,7 @@ namespace SomeEmotesREPO
 
             if (GameManager.Multiplayer())
             {
-                emoteLauncher = EmoteLoader.Instance.LoadEmote(playerController);
+                emoteLauncher = EmoteLoader.Instance.LoadEmote(playerAvatar);
                 emoteLauncher.emoteSystem = this;
             }
         }
@@ -126,7 +131,7 @@ namespace SomeEmotesREPO
         [PunRPC]
         private void RPC_PlayEmote(string emoteId)
         {
-            emoteLauncher.SetRotation(playerController.transform.rotation);
+            emoteLauncher.SetRotation(playerAvatar.transform.rotation);
             emoteLauncher.Animate(emoteId);
             SomeEmotesREPO.Logger.LogInfo($"[{photonView.Owner.NickName}] played emote {emoteId}.");
         }
@@ -139,28 +144,6 @@ namespace SomeEmotesREPO
 
         void Update()
         {
-            if (Input.GetKeyDown(KeyCode.P))
-            {
-                EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
-            }
-
-            Vector3 direction = Vector3.zero;
-
-            if (Input.GetKey(KeyCode.UpArrow))
-                direction += Vector3.forward;
-            if (Input.GetKey(KeyCode.DownArrow))
-                direction += Vector3.back;
-            if (Input.GetKey(KeyCode.LeftArrow))
-                direction += Vector3.left;
-            if (Input.GetKey(KeyCode.RightArrow))
-                direction += Vector3.right;
-
-            if (direction != Vector3.zero)
-            {
-                direction = direction.normalized;
-                camOffset += direction * Time.deltaTime * 0.005f;
-            }
-
             if (IsEmoting)
             {
                 emoteTime += Time.deltaTime;
@@ -174,6 +157,11 @@ namespace SomeEmotesREPO
 
             if (playerVisuals)
             {
+                if (PV.IsMine && Input.GetKeyDown(KeyCode.P))
+                {
+                    EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
+                }
+
                 if (!PV.IsMine)
                 {
                     playerVisuals.animator.enabled = !IsEmoting;

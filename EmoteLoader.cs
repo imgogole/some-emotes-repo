@@ -48,7 +48,7 @@ namespace SomeEmotesREPO
             return emotesName.GetRange(from, length);
         }
 
-        public EmoteLauncher LoadEmote(PlayerController player)
+        public EmoteLauncher LoadEmote(PlayerAvatar playerAvatar)
         {
             if (assetBundle == null)
             {
@@ -81,16 +81,16 @@ namespace SomeEmotesREPO
             }
 
             //init the launcher
-            emoteLauncher.Init(player.transform); //dumbass method
+            emoteLauncher.Init(playerAvatar.transform); //dumbass method
 
             //set emote names
-            if (player.playerAvatarScript.playerAvatarVisuals.playerAvatar.photonView.IsMine)//????
-                emotesName = emoteLauncher.emoteNames;
+            // if (playerAvatar.playerAvatarVisuals.playerAvatar.photonView.IsMine)//????
+            emotesName = emoteLauncher.emoteNames;
 
             // set the textures from the character
-            emoteLauncher.InitTexturesFrom(player.playerAvatar.transform.parent.gameObject);
+            emoteLauncher.InitTexturesFrom(playerAvatar.transform.parent.gameObject);
 
-            SomeEmotesREPO.Logger.LogInfo($"Emote created of {player.playerAvatarScript.playerAvatarVisuals.playerAvatar.photonView.Owner.NickName}");
+            //HierarchyLogger.LogFullHierarchy(playerAvatar.transform.parent.gameObject);
 
             return emoteLauncher;
         }

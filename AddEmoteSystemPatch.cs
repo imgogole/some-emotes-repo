@@ -6,12 +6,12 @@ using UnityEngine;
 
 namespace SomeEmotesREPO
 {
-    [HarmonyPatch(typeof(PlayerController))]
+    [HarmonyPatch(typeof(PlayerAvatar))]
     class AddEmoteSystemPatch
     {
         [HarmonyPostfix]
         [HarmonyPatch("Start")]
-        private static void Start_Postfix(PlayerController __instance)
+        private static void Start_Postfix(PlayerAvatar __instance)
         {
             var emoteSystem = __instance.GetComponent<EmoteSystem>();
             if (!emoteSystem)
@@ -19,9 +19,12 @@ namespace SomeEmotesREPO
                 emoteSystem = __instance.gameObject.AddComponent<EmoteSystem>();
             }
 
-            emoteSystem.SetPlayerController(__instance);
+            emoteSystem.SetPlayerAvatar(__instance);
 
-            SomeEmotesREPO.Logger.LogInfo("EmoteSystem has been added to the player. Press [P] to see the Emote Panel.");
+            if (__instance.photonView.IsMine)
+            {
+                SomeEmotesREPO.Logger.LogInfo("EmoteSystem has been added to the player. Press [P] to see the Emote Panel.");
+            }
         }
     }
 }

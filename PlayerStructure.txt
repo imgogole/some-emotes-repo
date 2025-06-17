@@ -335,3 +335,185 @@ Photon.Pun.PhotonHandler.Dispatch () (at <ff249545c46c47b8b35ec4cdc6f2f0ba>:0)
 Rethrow as AggregateException: Caught 1 exception(s) in methods called by DispatchIncomingCommands(). Rethrowing first only (see above). (Exception has been thrown by the target of an invocation.)
 Photon.Pun.PhotonHandler.Dispatch () (at <ff249545c46c47b8b35ec4cdc6f2f0ba>:0)
 Photon.Pun.PhotonHandler.FixedUpdate () (at <ff249545c46c47b8b35ec4cdc6f2f0ba>:0)
+
+
+- Player [PlayerAccess, PlayerNameChecker]
+  - Controller [INITIAL GAME OBJECT] [PhotonView, PlayerController, Inventory, Rigidbody, AudioSource, AudioLowPassFilter, AudioLowPassLogic, Animator, EmoteSystem]
+    - Collision [CapsuleCollider, PlayerCollision]
+    - Dust Particles [ParticleSystem, ParticleSystemRenderer]
+    - Collision Grounded [PlayerCollisionGrounded, SphereCollider]
+  - Collision Controller [PlayerCollisionController, AudioSource]
+    - Collision Crouch [CapsuleCollider, PlayerCollisionCrouch]
+  - Collision Stand [CapsuleCollider, PlayerCollisionStand]
+
+- PlayerAvatar(Clone)
+  - Player Visuals [PlayerAvatarVisuals, PlayerAvatarTalkAnimation, PlayerAvatarRightArm, PlayerAvatarLeftArm, PlayerEyes, Animator]
+    - Phys Rider [BoxCollider]
+    - Grabber Aim Target
+    - Grabber
+      - Grabber Parent
+        - grabber claw 1
+          - mesh_grabber_claw_1 [MeshFilter, MeshRenderer]
+        - grabber claw 2
+          - mesh_grabber_claw_2 [MeshFilter, MeshRenderer]
+        - grabber claw 3
+          - mesh_grabber_claw_3 [MeshFilter, MeshRenderer]
+        - Orb
+          - Orb Sphere 1 [MeshFilter, MeshRenderer]
+          - Orb Sphere 2 [MeshFilter, MeshRenderer]
+          - Orb light [Light]
+    - [RIG]
+      - code_lean
+        - code_tilt
+          - ANIM BOT
+            - code_leg_twist
+              - _____________________________________
+                - ANIM LEG R BOT
+                  - _____________________________________
+                    - ANIM LEG R TOP
+                      - mesh_leg_r [MeshFilter, MeshRenderer, CapsuleCollider]
+              - _____________________________________
+                - ANIM LEG L BOT
+                  - _____________________________________
+                    - ANIM LEG L TOP
+                      - mesh_leg_l [MeshFilter, MeshRenderer, CapsuleCollider]
+            - _____________________________________
+              - ANIM BODY BOT
+                - ANIM BODY BOT SCALE
+                  - mesh_body_bot [MeshFilter, MeshRenderer]
+                - _____________________________________
+                  - ANIM BODY TOP
+                    - code_body_top_up
+                      - code_body_top_side
+                        - ANIM BODY TOP SCALE
+                          - mesh_body_top_sphere [MeshFilter, MeshRenderer]
+                          - mesh_body_top_flat [MeshFilter, MeshRenderer]
+                        - _____________________________________
+                          - ANIM ARM L
+                            - code_arm_l
+                              - mesh_arm_l [MeshFilter, MeshRenderer, CapsuleCollider]
+                              - Flashlight Target Client
+                        - _____________________________________
+                          - ANIM ARM R
+                            - code_arm_r_parent
+                              - code_arm_r
+                                - ANIM ARM R SCALE
+                                  - mesh_arm_r [MeshFilter, MeshRenderer, CapsuleCollider]
+                                  - Grabber Target
+                                  - Phys Beam Origin Client
+                                  - Map Tool Target Client
+                        - _____________________________________
+                          - ANIM HEAD BOT
+                            - code_head_top_look_at
+                            - code_head_bot_up
+                              - code_head_bot_side [CapsuleCollider]
+                                - >> Attach Point - Jaw Bot
+                                - Health Hide
+                                  - mesh_health [MeshFilter, MeshRenderer]
+                                    - mesh_health frame [MeshFilter, MeshRenderer]
+                                    - mesh_health shadow [MeshFilter, MeshRenderer]
+                                    - Health Grab Target
+                                - mesh_head_bot_sphere [MeshFilter, MeshRenderer]
+                                - mesh_head_bot_flat [MeshFilter, MeshRenderer]
+                                - _____________________________________
+                                  - ANIM HEAD TOP
+                                    - code_head_top
+                                      - >> Attach Point - Jaw Top
+                                      - mesh_head_top [MeshFilter, MeshRenderer, CapsuleCollider]
+                                      - >> Attach Point - Top Head Middle
+                                      - ArenaCrown [MeshFilter, MeshRenderer]
+                                      - _____________________________________
+                                        - ANIM EYE LEFT
+                                          - code_eye_left
+                                            - mesh_eye_l [MeshFilter, MeshRenderer, SphereCollider]
+                                            - ANIM PUPIL LEFT
+                                              - mesh_pupil_l [MeshFilter, MeshRenderer]
+                                      - _____________________________________
+                                        - ANIM EYE RIGHT
+                                          - code_eye_right
+                                            - mesh_eye_r [MeshFilter, MeshRenderer, SphereCollider]
+                                            - ANIM PUPIL RIGHT
+                                              - mesh_pupil_r [MeshFilter, MeshRenderer]
+                                      - Eye Target Lead
+                                        - Eye Target Idle
+                                    - Eye Light [Light]
+                            - TTS Position
+    - Powerup Jump Effect
+      - Particle Impact [ParticleSystem, ParticleSystemRenderer]
+      - Particle Swirl [ParticleSystem, ParticleSystemRenderer]
+      - Particle Smoke [ParticleSystem, ParticleSystemRenderer]
+    - Tumble Break Free Effect
+      - Particle Impact [ParticleSystem, ParticleSystemRenderer]
+      - Particle Swirl [ParticleSystem, ParticleSystemRenderer]
+      - Particle Smoke [ParticleSystem, ParticleSystemRenderer]
+    - Get Into Truck Effect
+      - Point Light [Light]
+      - Particle Impact [ParticleSystem, ParticleSystemRenderer]
+      - Particle Swirl [ParticleSystem, ParticleSystemRenderer]
+      - Particle Smoke [ParticleSystem, ParticleSystemRenderer]
+  - Player Avatar Controller [INITIAL GAME OBJECT] [PhotonView, PlayerAvatar, PlayerVisionTarget, PlayerAvatarCollision, PlayerHealth, PhysGrabber, Rigidbody]
+    - Grabber Audio [AudioSource, AudioLowPassFilter, AudioLowPassLogic]
+    - Room [RoomVolumeCheck]
+    - Vision Target
+      - Spectate Point
+    - Collision [CapsuleCollider]
+    - Trigger [BoxCollider, PlayerTrigger]
+    - Phys Object Stander [PlayerPhysObjectStander, SphereCollider]
+  - Local Camera [PlayerLocalCamera]
+    - Phys Beam Origin
+    - Map Tool Target
+      - Map Tool
+        - Controller [PhotonView, MapToolController, AudioSource, AudioLowPassFilter, AudioLowPassLogic]
+        - Visuals
+          - Hide
+            - Main Spring Target
+            - Main Spring
+              - Base Offset
+                - Bob [DirtFinderBob]
+                  - Stick
+                    - stick [MeshFilter, MeshRenderer]
+                  - Main Unit
+                    - Display Spring Target
+                    - Display Spring
+                      - Counter [DirtFinderCounter]
+                        - Hatch Light [Light]
+                        - Hatch Mesh [MeshFilter, MeshRenderer]
+                        - counter back L [MeshFilter, MeshRenderer]
+                        - Icon [MeshFilter, MeshRenderer]
+                        - counter back R [MeshFilter, MeshRenderer]
+                        - Number [MeshRenderer, TextMeshPro, MeshFilter]
+                      - Light [Light]
+                      - LED - L [MeshFilter, MeshRenderer]
+                      - LED - R [MeshFilter, MeshRenderer]
+                      - main unit_1x1 [MeshFilter, MeshRenderer]
+                      - display_1x1 [MeshFilter, MeshRenderer]
+                      - Player Look Target
+    - Flashlight Target
+      - Flashlight [FlashlightController]
+        - Back Away Offset
+          - Back Away [ToolBackAway]
+            - Flashlight Sprint [FlashlightSprint]
+              - Flashlight Hide
+                - Flashlight Click
+                  - Flashlight Bob [FlashlightBob]
+                    - Flashlight Noise [AnimNoise]
+                      - Flashlight Tilt [FlashlightTilt]
+                        - Mesh [MeshFilter, MeshRenderer]
+                        - Light Offset
+                          - Flashlight Light [Light, Halo, FlashlightLightAim]
+  - Effects
+    - Death Effects [PlayerDeathEffects]
+      - Enable
+        - Smoke [ParticleSystem, ParticleSystemRenderer]
+        - Fire [ParticleSystem, ParticleSystemRenderer]
+        - Bits Strong [ParticleSystem, ParticleSystemRenderer]
+        - Bits Weak [ParticleSystem, ParticleSystemRenderer]
+        - Light [Light]
+        - Hurt Collider [HurtCollider, SphereCollider]
+    - Revive Effects [PlayerReviveEffects]
+      - Enable
+        - Point Light [Light]
+        - Particle Impact [ParticleSystem, ParticleSystemRenderer]
+        - Particle Swirl [ParticleSystem, ParticleSystemRenderer]
+  - Eye Look At
+  - Health Grab [PhotonView, BoxCollider, StaticGrabObject, PlayerHealthGrab]

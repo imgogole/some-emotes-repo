@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Linq;
+using System.Text;
 using UnityEngine;
 
 namespace SomeEmotesREPO
@@ -20,54 +21,22 @@ namespace SomeEmotesREPO
         {
             sb.Append(' ', indent * 2);
             string is_initial = (t == initial) ? " [INITIAL GAME OBJECT]" : "";
-            sb.AppendLine($"- {t.name}" + is_initial);
+
+            // Récupère tous les composants sauf Transform
+            Component[] components = t.GetComponents<Component>();
+            string componentList = string.Join(", ",
+                components
+                    .Where(c => !(c is Transform))
+                    .Select(c => c.GetType().Name));
+
+            if (!string.IsNullOrEmpty(componentList))
+                componentList = $" [{componentList}]";
+
+            sb.AppendLine($"- {t.name}{is_initial}{componentList}");
+
             foreach (Transform child in t)
                 BuildHierarchyString(child, indent + 1, sb, initial);
         }
-
-        public static void LogMeshHierarchy(GameObject go)
-        {
-            Transform root = go.transform;
-            while (root.parent != null)
-                root = root.parent;
-
-            var sb = new StringBuilder();
-            BuildMeshHierarchyString(root, 0, sb);
-            SomeEmotesREPO.Logger.LogInfo(sb.ToString());
-        }
-
-        private static void BuildMeshHierarchyString(Transform t, int indent, StringBuilder sb)
-        {
-            GameObject go = t.gameObject;
-            bool isActive = go.activeInHierarchy;
-            bool hasMeshRenderer = go.GetComponent<MeshRenderer>() != null;
-            bool hasSkinnedMeshRenderer = go.GetComponent<SkinnedMeshRenderer>() != null;
-            bool hasRenderer = hasMeshRenderer || hasSkinnedMeshRenderer;
-
-            string meshName = "N/A";
-
-            if (hasMeshRenderer)
-            {
-                MeshFilter filter = go.GetComponent<MeshFilter>();
-                if (filter != null && filter.sharedMesh != null)
-                    meshName = filter.sharedMesh.name;
-            }
-            else if (hasSkinnedMeshRenderer)
-            {
-                var smr = go.GetComponent<SkinnedMeshRenderer>();
-                if (smr.sharedMesh != null)
-                    meshName = smr.sharedMesh.name;
-            }
-
-            Vector3 pos = t.localPosition;
-            Vector3 euler = t.localEulerAngles;
-            Vector3 scale = t.localScale;
-
-            sb.Append(' ', indent * 2);
-            sb.AppendLine($"- {t.name} | Active: {isActive} | Renderer: {hasRenderer} | Pos: {pos}, Rot : {euler}, Scale : {scale} | Mesh: {meshName}");
-
-            foreach (Transform child in t)
-                BuildMeshHierarchyString(child, indent + 1, sb);
-        }
     }
 }
+

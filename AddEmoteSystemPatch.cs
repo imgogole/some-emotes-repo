@@ -23,7 +23,7 @@ namespace SomeEmotesREPO
 
             if (__instance.photonView.IsMine)
             {
-                SomeEmotesREPO.Logger.LogInfo("EmoteSystem has been added to the player. Press [P] to see the Emote Panel.");
+                SomeEmotesREPO.Logger.LogInfo($"EmoteSystem has been added to the player. Press [{EmoteLoader.PanelKey}] to see the Emote Panel.");
             }
         }
     }

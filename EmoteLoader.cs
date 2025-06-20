@@ -16,6 +16,10 @@ namespace SomeEmotesREPO
 
         private List<string> emotesName = new List<string>();
 
+        private Preferences emotesPreferences;
+
+        public static KeyCode PanelKey => instance != null && instance.emotesPreferences != null ? instance.emotesPreferences.panelKey : KeyCode.P;
+
         public int TotalPages
         {
             get
@@ -31,8 +35,34 @@ namespace SomeEmotesREPO
 
         void Start()
         {
-            var path = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "Emotes", "emotes.bundle");
-            assetBundle = EmoteBundleLoader.Load(path);
+            var bundlePath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "Emotes", "emotes.bundle");
+            assetBundle = EmoteBundleLoader.Load(bundlePath);
+
+            var preferencesPath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "preferences.json");
+            try
+            {
+                string content = File.ReadAllText(preferencesPath);
+                emotesPreferences = JsonUtility.FromJson<Preferences>(content);
+            }
+            catch
+            {
+                emotesPreferences = new Preferences();
+                SavePreferences();
+                SomeEmotesREPO.Logger.LogInfo("No preferences file found, creating one.");
+            }
+        }
+        
+        public void SavePreferences()
+        {
+            var preferencesPath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "preferences.json");
+            string content = JsonUtility.ToJson(emotesPreferences);
+            File.WriteAllText(preferencesPath, content);
+        }
+
+        public void SetFavorites(List<string> favs)
+        {
+            emotesPreferences.farovites = favs;
+            SavePreferences();
         }
 
         public List<string> FetchEmotes(int from, int offset)
@@ -86,6 +116,7 @@ namespace SomeEmotesREPO
             //set emote names
             // if (playerAvatar.playerAvatarVisuals.playerAvatar.photonView.IsMine)//????
             emotesName = emoteLauncher.emoteNames;
+            emoteLauncher.SetFavorites(emotesPreferences.farovites);
 
             // set the textures from the character
             emoteLauncher.InitTexturesFrom(playerAvatar.transform.parent.gameObject);
@@ -111,4 +142,11 @@ namespace SomeEmotesREPO
             return lastSegment;
         }
     }
+}
+
+[System.Serializable]
+public class Preferences
+{
+    public List<string> farovites = new List<string>();
+    public KeyCode panelKey = KeyCode.P;
 }

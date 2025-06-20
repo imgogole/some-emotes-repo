@@ -1,17 +1,30 @@
-﻿# SomeEmotesREPO - I'm Gogole
-SomeEmotesREPO is a mod for the R.E.P.O game. It allows players to play emotes.
+# SomeEmotesREPO - by ImGogole
 
->⚠ The mod is currently in development and contains several problems. As long as the mod is open source, you can contribute to the project by pulling a request.
+**SomeEmotesREPO** is a mod for the game **R.E.P.O.** that allows players to perform custom emotes.
 
-## How to install
-You can easily install the Thunderstore Mod Manager to allow you to have all the necessary for modding R.E.P.O.
-Link : https://www.overwolf.com/app/thunderstore-thunderstore_mod_manager
+> ⚠️ This mod is currently in development and may contain bugs. As long as it remains open-source, you're welcome to contribute via pull requests.
 
-If the mod doesn't appear yet in the store, you can simply add a release in the profile folder :
+---
+
+## 🛠️ Installation
+
+The easiest way to install the mod is through the [Thunderstore Mod Manager](https://www.overwolf.com/app/thunderstore-thunderstore_mod_manager), which provides everything you need to mod R.E.P.O.
+
+If the mod is not yet available on the store, you can install it manually:
+
+1. Download the release.
+2. Move it to the following directory:
+
 ```
-%AppData%\Roaming\Thunderstore Mod Manager\DataFolder\REPO\profiles\<ProfileName>\BepInEx\plugins // And replace <ProfileName> with the name of the profile you use.
+%AppData%\Roaming\Thunderstore Mod Manager\DataFolder\REPO\profiles\<YourProfileName>\BepInEx\plugins
 ```
 
-## How to use
-In game, simply press the `P` key. A list of emote is proposed, simply press the emote number corresponding to emote in game !
-Performing a movement cancels the emote animation.
+> Replace `<YourProfileName>` with the actual name of the profile you're using.
+
+---
+
+## 🎮 How to Use
+
+- In-game, press the **`P`** key to open the Emote Panel.
+- A list of emotes will appear; simply press the corresponding number key to play the emote.
+- Moving your character will interrupt and cancel the current emote.

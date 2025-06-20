@@ -1,15 +1,15 @@
 ManifestFileVersion: 0
-CRC: 1485827343
+CRC: 4040226279
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5f5a217b325821f6bc329a2884cc740a
+    Hash: b6c1e9b3703b191da017ee8f4055cb8e
   TypeTreeHash:
     serializedVersion: 2
     Hash: b202ec60f4ab6c2051313412611822f6
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 5f5a217b325821f6bc329a2884cc740a
+    Hash: b6c1e9b3703b191da017ee8f4055cb8e
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -34,7 +34,28 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
+- Assets/AnimationsExtracted/Dancing Twerk.anim
+- Assets/AnimationsExtracted/Breakdance Ready.anim
 - Assets/EmoteBundle/Emote.controller
+- Assets/AnimationsExtracted/Air Horse Gallop.anim
+- Assets/AnimationsExtracted/Thriller Part 3.anim
+- Assets/AnimationsExtracted/Swing Dancing.anim
+- Assets/AnimationsExtracted/Dancing.anim
+- Assets/AnimationsExtracted/Hip Hop Dancing (1).anim
+- Assets/AnimationsExtracted/Flair.anim
+- Assets/AnimationsExtracted/Shuffling.anim
+- Assets/AnimationsExtracted/Breakdance Freeze Var 2.anim
 - Assets/EmoteBundle/Emote.prefab
+- Assets/AnimationsExtracted/Breakdance Uprock Var 1.anim
+- Assets/AnimationsExtracted/Hip Hop Dancing.anim
+- Assets/AnimationsExtracted/Twist Dance.anim
+- Assets/AnimationsExtracted/Breakdance 1990.anim
+- Assets/AnimationsExtracted/Robot Hip Hop Dance.anim
+- Assets/AnimationsExtracted/Samba Dancing.anim
+- Assets/AnimationsExtracted/House Dancing.anim
+- Assets/AnimationsExtracted/Baby Shark.anim
+- Assets/AnimationsExtracted/Hip Hop Dancing (2).anim
 - Assets/EmoteBundle/Capoeira.anim
+- Assets/AnimationsExtracted/Northern Soul Spin.anim
+- Assets/AnimationsExtracted/Brooklyn Uprock.anim
 Dependencies: []

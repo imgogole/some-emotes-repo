@@ -23,6 +23,8 @@ namespace SomeEmotesREPO
         public const int emotePerPages = 8;
         public const string delimiter = "----------------";
 
+
+
         public static EmoteSelectionManager Instance
         {
             get { return instance; }
@@ -32,6 +34,8 @@ namespace SomeEmotesREPO
         {
             instance = this;
 
+
+            //GUI.Label(new Rect(-9999, -9999, 1, 1), "");
             SomeEmotesREPO.Logger.LogInfo("EmoteSelectionManager ready.");
         }
 
@@ -55,30 +59,40 @@ namespace SomeEmotesREPO
         {
             if (Visible)
             {
-                if (currentPage > 0)
+                if (currentPage > 0 && Input.GetKeyDown(KeyCode.LeftArrow))
                 {
-                    if (Input.GetKeyDown(KeyCode.Alpha0))
-                    {
-                        OpenPanel(currentPage - 1);
-                    }
+                    OpenPanel(currentPage - 1);
                 }
-                if (currentPage < EmoteLoader.Instance.TotalPages)
+
+                if (currentPage < EmoteLoader.Instance.TotalPages && Input.GetKeyDown(KeyCode.RightArrow))
                 {
-                    if (Input.GetKeyDown(KeyCode.Comma))
-                    {
-                        OpenPanel(currentPage + 1);
-                    }
+                    OpenPanel(currentPage + 1);
                 }
 
                 for (int i = 0; i < emotesToPlay.Count; i++)
                 {
-                    if (Input.GetKeyDown((KeyCode)(49 + i)) || Input.GetKeyDown((KeyCode)(257 + i)))
+                    KeyCode key1 = (KeyCode)(49 + i);
+                    KeyCode key2 = (KeyCode)(257 + i);
+
+                    bool pressed = Input.GetKeyDown(key1) || Input.GetKeyDown(key2);
+                    bool ctrl = Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt) || Input.GetKey(KeyCode.AltGr);
+
+                    if (pressed)
                     {
-                        EmoteSystem.Instance.PlayEmote(emotesToPlay[i]);
+                        if (ctrl)
+                        {
+                            EmoteSystem.Instance.SetFavorite(emotesToPlay[i]);
+                            UpdateLines();
+                        }
+                        else
+                        {
+                            EmoteSystem.Instance.PlayEmote(emotesToPlay[i]);
+                        }
                     }
                 }
             }
         }
+
 
         void UpdateLines()
         {
@@ -104,7 +118,7 @@ namespace SomeEmotesREPO
                     lines.Add($"No favorite emote yet");
                 }
                 lines.Add(delimiter);
-                lines.Add("Press [.] for next page");
+                lines.Add("Press [->] for next page");
             }
             else
             {
@@ -116,13 +130,13 @@ namespace SomeEmotesREPO
                     emotesToPlay.Add(l[i]);
                 }
                 lines.Add(delimiter);
-                if (EmoteLoader.Instance.TotalPages > currentPage) lines.Add("Press [.] for next page");
-                lines.Add("Press [0] for previous page");
+                if (EmoteLoader.Instance.TotalPages > currentPage) lines.Add("Press [->] for next page");
+                lines.Add("Press [<-] for previous page");
             }
 
             lines.Add("Press [Num] to emote");
-            lines.Add("Press [Ctrl + Num] to add to favourite");
-            lines.Add("Press [P] to quit");
+            lines.Add("Press [Alt + Num] to add to favourite");
+            lines.Add($"Press [{EmoteLoader.PanelKey}] to quit");
         }
 
         void OnGUI()

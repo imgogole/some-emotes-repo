@@ -6,11 +6,14 @@ using UnityEngine;
 
 namespace SomeEmotesREPO
 {
-    public class EmoteSystem : MonoBehaviourPun, IPunObservable
+    public class EmoteSystem : MonoBehaviourPun
     {
         private bool isEmoting = false;
         private int emoteId = -1;
         private float emoteTime = 0f;
+        private float initialRot = 0f;
+
+        bool ready = false;
 
         public bool IsEmoting
         {
@@ -20,34 +23,11 @@ namespace SomeEmotesREPO
             }
             set
             {
-                if (photonView.IsMine)
-                {
-                    isEmoting = value;
-
-                    if (camTransform)
-                    {
-                        if (isEmoting) camTransform.localPosition = camOffset;
-                        else camTransform.localPosition = Vector3.zero;
-                    }
-                }
+                isEmoting = value;
 
                 if (isEmoting)
                 {
                     emoteTime = 0f;
-                }
-            }
-        }
-        public int EmoteID
-        {
-            get
-            {
-                return emoteId;
-            }
-            set
-            {
-                if (photonView.IsMine)
-                {
-                    emoteId = value;
                 }
             }
         }
@@ -57,7 +37,8 @@ namespace SomeEmotesREPO
         private PlayerAvatar playerAvatar;
         private PlayerAvatarVisuals playerVisuals;
 
-        private static Vector3 camOffset = new Vector3(0f, 0f, -3.25f);
+        private static float initalCamOffset = 3.25f;
+        private static float camOffset = initalCamOffset;
 
         private static EmoteSystem instance;
         public static EmoteSystem Instance => instance;
@@ -74,7 +55,17 @@ namespace SomeEmotesREPO
 
         private void Awake()
         {
+            ready = false;
             if (Camera.main != null) camTransform = Camera.main.transform;
+        }
+
+        public void SetFavorite(string fav)
+        {
+            emoteLauncher.SetFavorite(fav);
+        }
+        public void SetFavorites(List<string> favs)
+        {
+            emoteLauncher.SetFavorites(favs);
         }
 
         public void SetPlayerAvatar(PlayerAvatar pa)
@@ -107,6 +98,8 @@ namespace SomeEmotesREPO
                 emoteLauncher = EmoteLoader.Instance.LoadEmote(playerAvatar);
                 emoteLauncher.emoteSystem = this;
             }
+
+            ready = true;
         }
 
         public void PlayEmote(string emoteId)
@@ -115,7 +108,7 @@ namespace SomeEmotesREPO
 
             EmoteSelectionManager.Instance.SetVisible(false);
             IsEmoting = true;
-            photonView.RPC(nameof(RPC_PlayEmote), RpcTarget.All, emoteId);
+            photonView.RPC(nameof(RPC_PlayEmote), RpcTarget.All, emoteId, initialRot);
         }
 
         public void StopEmote()
@@ -128,9 +121,11 @@ namespace SomeEmotesREPO
         }
 
         [PunRPC]
-        private void RPC_PlayEmote(string emoteId)
+        private void RPC_PlayEmote(string emoteId, float _initialRot)
         {
-            emoteLauncher.SetRotation(playerAvatar.transform.rotation);
+            IsEmoting = true;
+
+            emoteLauncher.SetRotation(_initialRot);
             emoteLauncher.Animate(emoteId);
             SomeEmotesREPO.Logger.LogInfo($"[{photonView.Owner.NickName}] played emote {emoteId}.");
         }
@@ -138,11 +133,15 @@ namespace SomeEmotesREPO
         [PunRPC]
         private void RPC_StopEmote()
         {
+            IsEmoting = false;
+
             emoteLauncher.StopEmote();
         }
 
         void Update()
         {
+            if (!ready) return;
+
             if (IsEmoting)
             {
                 emoteTime += Time.deltaTime;
@@ -154,9 +153,22 @@ namespace SomeEmotesREPO
                 }
             }
 
+            if (PV.IsMine && camTransform)
+            {
+                if (isEmoting) camTransform.localPosition = new Vector3(0f, 0f, -camOffset);
+                else camTransform.localPosition = Vector3.zero;
+
+                float scroll = Input.mouseScrollDelta.y;
+                if (scroll != 0f)
+                {
+                    camOffset -= scroll * Time.deltaTime * 20f;
+                    camOffset = Mathf.Clamp(camOffset, 0.5f, 4f); 
+                }
+            }
+
             if (playerVisuals)
             {
-                if (PV.IsMine && Input.GetKeyDown(KeyCode.P))
+                if (PV.IsMine && Input.GetKeyDown(EmoteLoader.PanelKey))
                 {
                     EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
                 }
@@ -168,22 +180,10 @@ namespace SomeEmotesREPO
                 }
                 else
                 {
-                    //according to repo PlayerAvatarVisuals.Start(), ignores the visuals for the client (always hidden)                    
-                }
-            }
-        }
+                    //according to repo PlayerAvatarVisuals.Start(), ignores the visuals for the client (always hidden)
 
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
-        {
-            if (stream.IsWriting)
-            {
-                isEmoting = (bool)stream.ReceiveNext();
-                emoteId = (int)stream.ReceiveNext();
-            }
-            else if (stream.IsReading)
-            {
-                stream.SendNext(isEmoting);
-                stream.SendNext(emoteId);
+                    initialRot = playerAvatar.transform.eulerAngles.y;
+                }
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 
@@ -15,10 +16,12 @@ namespace SomeEmotesREPO
         private AnimatorOverrideController overrideController;
         private string overrideKeyName = "Placeholder";
 
-        private Quaternion initialRot;
+        private float initialRot;
         private Transform targetPlayer;
 
         private GameObject visuals;
+
+
 
         public void AddEntry(string name, AnimationClip clip)
         {
@@ -54,11 +57,34 @@ namespace SomeEmotesREPO
         {
             if (emoteSystem && emoteSystem.IsEmoting)
             {
-                transform.rotation = initialRot;
+                transform.eulerAngles = new Vector3(transform.eulerAngles.x, initialRot, transform.eulerAngles.z);
+            }
+        }
+        public void SetFavorite(string fav)
+        {
+            if (!string.IsNullOrEmpty(fav))
+            {
+                SetFavorites(new List<string> { fav });
             }
         }
 
-        public void SetRotation(Quaternion _initialRot)
+
+        public void SetFavorites(List<string> favs)
+        {
+            if (emoteNames == null || emoteNames.Count == 0 || favs == null || favs.Count == 0)
+                return;
+
+            int max = Mathf.Min(EmoteSelectionManager.emotePerPages, emoteNames.Count);
+            List<string> firstPageEmotes = emoteNames.Take(max).ToList();
+            List<string> validFavs = favs.Where(f => firstPageEmotes.Contains(f)).Distinct().ToList();
+            emoteNames.RemoveAll(e => validFavs.Contains(e));
+            emoteNames.InsertRange(0, validFavs);
+
+            EmoteLoader.Instance.SetFavorites(emoteNames.Take(max).ToList());
+        }
+
+
+        public void SetRotation(float _initialRot)
         {
             initialRot = _initialRot;
         }

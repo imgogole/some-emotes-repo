@@ -35,7 +35,7 @@ namespace SomeEmotesREPO
 
         void Start()
         {
-            var bundlePath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "Emotes", "emotes.bundle");
+            var bundlePath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "emotes.bundle");
             assetBundle = EmoteBundleLoader.Load(bundlePath);
 
             var preferencesPath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "preferences.json");

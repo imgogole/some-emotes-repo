@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using static UnityEngine.Rendering.DebugUI.MessageBox;
 
 namespace SomeEmotesREPO
 {
@@ -21,9 +22,10 @@ namespace SomeEmotesREPO
         public bool Visible => visible;
 
         public const int emotePerPages = 8;
-        public const string delimiter = "----------------";
+        public const int LineHeigth = 30;
+        public const string delimiter = "-----------------------------";
 
-
+        public GUIStyle style;
 
         public static EmoteSelectionManager Instance
         {
@@ -34,8 +36,6 @@ namespace SomeEmotesREPO
         {
             instance = this;
 
-
-            //GUI.Label(new Rect(-9999, -9999, 1, 1), "");
             SomeEmotesREPO.Logger.LogInfo("EmoteSelectionManager ready.");
         }
 
@@ -98,7 +98,7 @@ namespace SomeEmotesREPO
         {
             lines.Clear();
             emotesToPlay.Clear();
-            var l = EmoteLoader.Instance.FetchEmotes(currentPage * emotePerPages, emotePerPages);
+            var l = EmoteSystem.Instance.FetchEmotes(currentPage * emotePerPages, emotePerPages);
 
             if (currentPage == 0)
             {
@@ -115,14 +115,14 @@ namespace SomeEmotesREPO
                 }
                 else
                 {
-                    lines.Add($"No favorite emote yet");
+                    lines.Add($"No emote yet");
                 }
                 lines.Add(delimiter);
                 lines.Add("Press [->] for next page");
             }
             else
             {
-                lines.Add($"Page {currentPage}/{EmoteLoader.Instance.TotalPages}");
+                lines.Add($"Page {currentPage + 1}/{EmoteLoader.Instance.TotalPages + 1}");
                 lines.Add(delimiter);
                 for (int i = 0; i < l.Count; i++)
                 {
@@ -134,25 +134,35 @@ namespace SomeEmotesREPO
                 lines.Add("Press [<-] for previous page");
             }
 
-            lines.Add("Press [Num] to emote");
-            lines.Add("Press [Alt + Num] to add to favourite");
+            if (l.Count > 0)
+            {
+                lines.Add("Press [Num] to emote");
+                lines.Add("Press [Alt + Num] to add to favorite");
+            }
             lines.Add($"Press [{EmoteLoader.PanelKey}] to quit");
         }
 
         void OnGUI()
         {
-            if (!Visible || Lines.Count == 0)
+            if (!EmoteSystem.Ready || !Visible || Lines.Count == 0)
                 return;
 
-            const float pad = 8f;
-            float lineH = 18f;
+            if (style == null)
+            {
+                style = GUI.skin.GetStyle("label");
+                style.fontSize = (LineHeigth - 8);
+                style.font = EmoteLoader.GetFont();
+                style.richText = true;
+            }
 
-            float y = Screen.height - pad - Lines.Count * lineH;
+            const float pad = 8f;
+
+            float y = Screen.height - pad - Lines.Count * LineHeigth;
 
             foreach (var line in Lines)
             {
-                GUI.Label(new Rect(pad, y, Screen.width - pad * 2, lineH), line);
-                y += lineH;
+                GUI.Label(new Rect(pad, y, Screen.width - pad * 2, LineHeigth), line, style);
+                y += LineHeigth;
             }
         }
     }

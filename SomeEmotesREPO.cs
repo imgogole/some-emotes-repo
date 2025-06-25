@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SomeEmotesREPO;
 
-[BepInPlugin("ImGogole.SomeEmotesREPO", "SomeEmotesREPO", "1.0")]
+[BepInPlugin("ImGogole.SomeEmotesREPO", "SomeEmotesREPO", "1.0.3")]
 public class SomeEmotesREPO : BaseUnityPlugin
 {
     internal static SomeEmotesREPO Instance { get; private set; } = null!;

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -14,7 +15,7 @@ namespace SomeEmotesREPO
         private static EmoteLoader instance;
         public static EmoteLoader Instance {  get { return instance;  } }
 
-        private List<string> emotesName = new List<string>();
+        public List<string> emotesName = new List<string>();
 
         private Preferences emotesPreferences;
 
@@ -46,10 +47,15 @@ namespace SomeEmotesREPO
             }
             catch
             {
+                SomeEmotesREPO.Logger.LogInfo("No preferences file found, creating one.");
                 emotesPreferences = new Preferences();
                 SavePreferences();
-                SomeEmotesREPO.Logger.LogInfo("No preferences file found, creating one.");
             }
+        }
+
+        public static Font GetFont()
+        {
+            return instance.assetBundle.LoadAllAssets<Font>().First(f => f.name.ToLower().Contains("teko-regular"));
         }
         
         public void SavePreferences()
@@ -63,19 +69,6 @@ namespace SomeEmotesREPO
         {
             emotesPreferences.farovites = favs;
             SavePreferences();
-        }
-
-        public List<string> FetchEmotes(int from, int offset)
-        {
-            var result = new List<string>();
-
-            if (from < 0) from = 0;
-            if (offset <= 0 || from >= emotesName.Count)
-                return result;
-
-            int length = Mathf.Min(offset, emotesName.Count - from);
-
-            return emotesName.GetRange(from, length);
         }
 
         public EmoteLauncher LoadEmote(PlayerAvatar playerAvatar)
@@ -103,25 +96,28 @@ namespace SomeEmotesREPO
             //asked emote
             EmoteLauncher emoteLauncher = emoteInstance.AddComponent<EmoteLauncher>();
 
+            var animNames = EmoteBundleLoader.GetAllAnimNames();
+
             //we search every anim in the assetbundle, check them then add them into out emote launcher
-            List<string> animNames = EmoteBundleLoader.GetAllAnimNames();
             foreach (string name in animNames)
             {
-                emoteLauncher.AddEntry(ExtractElement(name), EmoteBundleLoader.LoadAsset<AnimationClip>(name));
+                string emoteName = ExtractElement(name);
+                if (string.IsNullOrWhiteSpace(emoteName))
+                {
+                    continue;
+                }
+                emoteLauncher.AddEntry(emoteName, EmoteBundleLoader.LoadAsset<AnimationClip>(name));
+                emotesName.Add(emoteName);
             }
 
             //init the launcher
             emoteLauncher.Init(playerAvatar.transform); //dumbass method
-
-            //set emote names
-            // if (playerAvatar.playerAvatarVisuals.playerAvatar.photonView.IsMine)//????
-            emotesName = emoteLauncher.emoteNames;
             emoteLauncher.SetFavorites(emotesPreferences.farovites);
 
             // set the textures from the character
             emoteLauncher.InitTexturesFrom(playerAvatar.transform.parent.gameObject);
 
-            //HierarchyLogger.LogFullHierarchy(playerAvatar.transform.parent.gameObject);
+            //SomeEmotesREPO.Logger.LogInfo($"Created emote for {playerAvatar.photonView.Owner.NickName} with loaded emotes : {string.Join(", ", emotesName)}");
 
             return emoteLauncher;
         }

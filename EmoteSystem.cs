@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using UnityEngine;
+using System;
 
 namespace SomeEmotesREPO
 {
@@ -14,6 +15,15 @@ namespace SomeEmotesREPO
         private float initialRot = 0f;
 
         bool ready = false;
+
+        public static bool Ready
+        {
+            get
+            {
+                if (!instance) return false;
+                return instance.ready;
+            }
+        }
 
         public bool IsEmoting
         {
@@ -59,9 +69,17 @@ namespace SomeEmotesREPO
             if (Camera.main != null) camTransform = Camera.main.transform;
         }
 
+        public List<string> FetchEmotes(int startIndex, int count)
+        {
+            return emoteLauncher.EmoteNames
+                .Skip(Math.Max(startIndex, 0))
+                .Take(Math.Max(count, 0))
+                .ToList();
+        }
+
         public void SetFavorite(string fav)
         {
-            emoteLauncher.SetFavorite(fav);
+            SetFavorites(new List<string>() { fav });
         }
         public void SetFavorites(List<string> favs)
         {
@@ -86,7 +104,6 @@ namespace SomeEmotesREPO
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
                 }
             }
-
 
             if (PV.IsMine)
             {
@@ -206,6 +223,14 @@ namespace SomeEmotesREPO
             }
 
             return false;
+        }
+
+        public void OnDestroy()
+        {
+            if (emoteLauncher != null)
+            {
+                Destroy(emoteLauncher.gameObject);
+            }
         }
     }
 }

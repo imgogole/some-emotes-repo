@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
+using System.Linq;
+
 
 namespace SomeEmotesREPO
 {
@@ -20,8 +21,9 @@ namespace SomeEmotesREPO
         private Transform targetPlayer;
 
         private GameObject visuals;
+        private GameObject spotlight;
 
-
+        public List<string> EmoteNames => emoteNames;
 
         public void AddEntry(string name, AnimationClip clip)
         {
@@ -32,6 +34,7 @@ namespace SomeEmotesREPO
         {
             targetPlayer = target;
             visuals = transform.GetChild(0).gameObject;
+            spotlight = transform.GetChild(1).gameObject;
             animator = GetComponentInChildren<Animator>();
             overrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
             animator.runtimeAnimatorController = overrideController;
@@ -42,7 +45,9 @@ namespace SomeEmotesREPO
             }
 
             InitBones();
+            InitLight();
             visuals.SetActive(false);
+            spotlight.SetActive(false);
         }
 
         void Update()
@@ -60,27 +65,22 @@ namespace SomeEmotesREPO
                 transform.eulerAngles = new Vector3(transform.eulerAngles.x, initialRot, transform.eulerAngles.z);
             }
         }
-        public void SetFavorite(string fav)
-        {
-            if (!string.IsNullOrEmpty(fav))
-            {
-                SetFavorites(new List<string> { fav });
-            }
-        }
-
 
         public void SetFavorites(List<string> favs)
         {
-            if (emoteNames == null || emoteNames.Count == 0 || favs == null || favs.Count == 0)
+            if (favs == null || favs.Count == 0)
                 return;
 
-            int max = Mathf.Min(EmoteSelectionManager.emotePerPages, emoteNames.Count);
-            List<string> firstPageEmotes = emoteNames.Take(max).ToList();
-            List<string> validFavs = favs.Where(f => firstPageEmotes.Contains(f)).Distinct().ToList();
-            emoteNames.RemoveAll(e => validFavs.Contains(e));
-            emoteNames.InsertRange(0, validFavs);
+            var validFavs = favs.Where(emoteNames.Contains).Distinct().ToList();
+            if (validFavs.Count == 0)
+                return;
 
-            EmoteLoader.Instance.SetFavorites(emoteNames.Take(max).ToList());
+            emoteNames.RemoveAll(validFavs.Contains);
+            emoteNames.InsertRange(0, validFavs);
+            EmoteLoader.Instance.emotesName = new List<string>(emoteNames);
+            int max = System.Math.Min(EmoteSelectionManager.emotePerPages, emoteNames.Count);
+            var prefs = emoteNames.Take(max).ToList();
+            EmoteLoader.Instance.SetFavorites(prefs);
         }
 
 
@@ -98,6 +98,7 @@ namespace SomeEmotesREPO
 
             animator.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             visuals.SetActive(true);
+            spotlight.SetActive(true);//todo MAKE IT BETTER
 
             overrideController[overrideKeyName] = clip;
             animator.ResetTrigger("StopEmote");
@@ -108,7 +109,24 @@ namespace SomeEmotesREPO
         public void StopEmote()
         {
             visuals.SetActive(false);
+            spotlight.SetActive(false);
             animator.SetTrigger("StopEmote");
+        }
+
+        void InitLight()
+        {
+            Light light = spotlight.AddComponent<Light>();
+            light.transform.localPosition = Vector3.up * 2.5f;
+            light.transform.localEulerAngles = Vector3.left * 90f;
+            light.type = LightType.Spot;
+            light.innerSpotAngle = 35f;
+            light.spotAngle = 40f;
+            light.color = new Color(1f, 0.97f, 0.84f);
+            light.intensity = 1.5f;
+            light.bounceIntensity = 1f;
+            light.range = 5f;
+            light.shadows = LightShadows.None;
+            light.cullingMask = ~0;
         }
 
         void InitBones()
@@ -133,8 +151,6 @@ namespace SomeEmotesREPO
 
         public void InitTexturesFrom(GameObject initial)
         {
-            //HierarchyLogger.LogFullHierarchy(initial);
-
             if (leg_R != null) leg_R.materials = GetMaterialsFromBone(initial, "mesh_leg_r");
             if (leg_L != null) leg_L.materials = GetMaterialsFromBone(initial, "mesh_leg_l");
             if (body_bot != null) body_bot.materials = GetMaterialsFromBone(initial, "mesh_body_bot");

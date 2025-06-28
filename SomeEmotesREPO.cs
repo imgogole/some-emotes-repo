@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using HarmonyLib;
 using System;
@@ -8,7 +9,7 @@ using UnityEngine;
 
 namespace SomeEmotesREPO;
 
-[BepInPlugin("ImGogole.SomeEmotesREPO", "SomeEmotesREPO", "1.0.3")]
+[BepInPlugin("ImGogole.SomeEmotesREPO", "SomeEmotesREPO", "1.0.4")]
 public class SomeEmotesREPO : BaseUnityPlugin
 {
     internal static SomeEmotesREPO Instance { get; private set; } = null!;
@@ -16,12 +17,16 @@ public class SomeEmotesREPO : BaseUnityPlugin
     private ManualLogSource _logger => base.Logger;
     internal Harmony? Harmony { get; set; }
 
+    public static ConfigEntry<bool> ConfigActiveEmoteSystem;
+
     private void Awake()
     {
         Instance = this;
 
         this.gameObject.transform.parent = null;
         this.gameObject.hideFlags = HideFlags.HideAndDontSave;
+
+        ConfigActiveEmoteSystem = Config.Bind("General", "ActiveEmoteSystem", true, "Toggles if emotes should be enabled for you");
 
         if (!GetComponent<EmoteSelectionManager>()) gameObject.AddComponent<EmoteSelectionManager>();
         if (!GetComponent<EmoteLoader>()) gameObject.AddComponent<EmoteLoader>();

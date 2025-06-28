@@ -4,6 +4,7 @@ using System.Collections;
 using System.Linq;
 using UnityEngine;
 using System;
+using SomeEmotesREPO.Utils;
 
 namespace SomeEmotesREPO
 {
@@ -54,6 +55,7 @@ namespace SomeEmotesREPO
         public static EmoteSystem Instance => instance;
 
         private EmoteLauncher emoteLauncher;
+        private Animator animator;
 
         private PhotonView PV
         {
@@ -102,6 +104,7 @@ namespace SomeEmotesREPO
                 if (playerVisuals == null)
                 {
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
+                    animator = playerVisuals.GetComponentInChildren<Animator>();
                 }
             }
 
@@ -140,6 +143,9 @@ namespace SomeEmotesREPO
         [PunRPC]
         private void RPC_PlayEmote(string emoteId, float _initialRot)
         {
+            // Ignores if emotes are disabled by the client
+            if (SomeEmotesREPO.ConfigActiveEmoteSystem.Value == false) return;
+
             IsEmoting = true;
 
             emoteLauncher.SetRotation(_initialRot);
@@ -185,14 +191,14 @@ namespace SomeEmotesREPO
 
             if (playerVisuals)
             {
-                if (PV.IsMine && Input.GetKeyDown(EmoteLoader.PanelKey))
+                if (PV.IsMine && Input.GetKeyDown(EmoteLoader.PanelKey) && !ChatReflection.IsChatActive())
                 {
                     EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
                 }
 
                 if (!PV.IsMine)
                 {
-                    playerVisuals.animator.enabled = !IsEmoting;
+                    animator.enabled = !IsEmoting;
                     playerVisuals.meshParent.SetActive(!IsEmoting);
                 }
                 else

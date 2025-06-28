@@ -1,10 +1,6 @@
-﻿using Sirenix.Serialization;
-using System;
+﻿using SomeEmotesREPO.Utils;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using static UnityEngine.Rendering.DebugUI.MessageBox;
 
 namespace SomeEmotesREPO
 {
@@ -57,6 +53,8 @@ namespace SomeEmotesREPO
 
         void Update()
         {
+            if (ChatReflection.IsChatActive()) return;
+
             if (Visible)
             {
                 if (currentPage > 0 && Input.GetKeyDown(KeyCode.LeftArrow))

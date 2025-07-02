@@ -104,7 +104,7 @@ namespace SomeEmotesREPO
                 if (playerVisuals == null)
                 {
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
-                    animator = playerVisuals.GetComponentInChildren<Animator>();
+                    animator = playerVisuals.GetComponentInChildren<Animator>();//hahahahha so much love to change animator visibility to internal <333
                 }
             }
 
@@ -144,7 +144,7 @@ namespace SomeEmotesREPO
         private void RPC_PlayEmote(string emoteId, float _initialRot)
         {
             // Ignores if emotes are disabled by the client
-            if (SomeEmotesREPO.ConfigActiveEmoteSystem.Value == false) return;
+            //if (!PV.IsMine && SomeEmotesREPO.ConfigActiveEmoteSystem.Value == false) return;
 
             IsEmoting = true;
 
@@ -191,7 +191,7 @@ namespace SomeEmotesREPO
 
             if (playerVisuals)
             {
-                if (PV.IsMine && Input.GetKeyDown(EmoteLoader.PanelKey) && !ChatReflection.IsChatActive())
+                if (PV.IsMine && !playerAvatar.deadSet && Input.GetKeyDown(EmoteLoader.PanelKey) && !ChatReflection.IsChatActive())
                 {
                     EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
                 }

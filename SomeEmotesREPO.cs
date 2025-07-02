@@ -26,7 +26,8 @@ public class SomeEmotesREPO : BaseUnityPlugin
         this.gameObject.transform.parent = null;
         this.gameObject.hideFlags = HideFlags.HideAndDontSave;
 
-        ConfigActiveEmoteSystem = Config.Bind("General", "ActiveEmoteSystem", true, "Toggles if emotes should be enabled for you");
+        // for EmoteSystem.RPC_PlayEmote
+        //ConfigActiveEmoteSystem = Config.Bind("General", "EnableOtherEmotes", true, "Toggles if emotes of other players should be enabled for you");
 
         if (!GetComponent<EmoteSelectionManager>()) gameObject.AddComponent<EmoteSelectionManager>();
         if (!GetComponent<EmoteLoader>()) gameObject.AddComponent<EmoteLoader>();

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ImGogole")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.4.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.4+601021252dad30f494ef1790ad2b98677f1508eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.4+f41e6a37df37e2c09a0f785f0517d59f4b33ca03")]
 [assembly: System.Reflection.AssemblyProductAttribute("SomeEmotesREPO")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SomeEmotesREPO")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.4.0")]

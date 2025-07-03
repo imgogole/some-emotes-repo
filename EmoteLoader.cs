@@ -36,10 +36,11 @@ namespace SomeEmotesREPO
 
         void Start()
         {
-            var bundlePath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "emotes.bundle");
+            var pluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            var bundlePath = Path.Combine(pluginFolder, "emotes.bundle");
             assetBundle = EmoteBundleLoader.Load(bundlePath);
 
-            var preferencesPath = Path.Combine(Paths.PluginPath, "ImGogole-SomeEmotesREPO", "preferences.json");
+            var preferencesPath = Path.Combine(pluginFolder, "preferences.json");
             try
             {
                 string content = File.ReadAllText(preferencesPath);

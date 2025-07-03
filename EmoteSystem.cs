@@ -104,7 +104,7 @@ namespace SomeEmotesREPO
                 if (playerVisuals == null)
                 {
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
-                    animator = playerVisuals.GetComponentInChildren<Animator>();//hahahahha so much love to change animator visibility to internal <333
+                    animator = playerVisuals.animator;//nvm repo lib is here
                 }
             }
 
@@ -191,7 +191,7 @@ namespace SomeEmotesREPO
 
             if (playerVisuals)
             {
-                if (PV.IsMine && !playerAvatar.deadSet && Input.GetKeyDown(EmoteLoader.PanelKey) && !ChatReflection.IsChatActive())
+                if (PV.IsMine && !playerAvatar.deadSet && Input.GetKeyDown(EmoteLoader.PanelKey) && !ChatManager.instance.chatActive)
                 {
                     EmoteSelectionManager.Instance.SetVisible(!EmoteSelectionManager.Instance.Visible);
                 }

@@ -53,7 +53,7 @@ namespace SomeEmotesREPO
 
         void Update()
         {
-            if (ChatReflection.IsChatActive()) return;
+            if (ChatManager.instance.chatActive) return;
 
             if (Visible)
             {

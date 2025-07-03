@@ -17,17 +17,12 @@ public class SomeEmotesREPO : BaseUnityPlugin
     private ManualLogSource _logger => base.Logger;
     internal Harmony? Harmony { get; set; }
 
-    public static ConfigEntry<bool> ConfigActiveEmoteSystem;
-
     private void Awake()
     {
         Instance = this;
 
         this.gameObject.transform.parent = null;
         this.gameObject.hideFlags = HideFlags.HideAndDontSave;
-
-        // for EmoteSystem.RPC_PlayEmote
-        //ConfigActiveEmoteSystem = Config.Bind("General", "EnableOtherEmotes", true, "Toggles if emotes of other players should be enabled for you");
 
         if (!GetComponent<EmoteSelectionManager>()) gameObject.AddComponent<EmoteSelectionManager>();
         if (!GetComponent<EmoteLoader>()) gameObject.AddComponent<EmoteLoader>();

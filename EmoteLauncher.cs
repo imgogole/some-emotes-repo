@@ -98,7 +98,7 @@ namespace SomeEmotesREPO
 
             animator.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
             visuals.SetActive(true);
-            spotlight.SetActive(true);//todo MAKE IT BETTER
+            spotlight.SetActive(true);
 
             overrideController[overrideKeyName] = clip;
             animator.ResetTrigger("StopEmote");
@@ -117,12 +117,12 @@ namespace SomeEmotesREPO
         {
             Light light = spotlight.AddComponent<Light>();
             light.transform.localPosition = Vector3.up * 2.5f;
-            light.transform.localEulerAngles = Vector3.left * 90f;
+            light.transform.localEulerAngles = -Vector3.left * 90f;
             light.type = LightType.Spot;
             light.innerSpotAngle = 35f;
             light.spotAngle = 40f;
             light.color = new Color(1f, 0.97f, 0.84f);
-            light.intensity = 1.5f;
+            light.intensity = 1.75f;
             light.bounceIntensity = 1f;
             light.range = 5f;
             light.shadows = LightShadows.None;

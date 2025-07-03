@@ -22,7 +22,6 @@ namespace SomeEmotesREPO
             sb.Append(' ', indent * 2);
             string is_initial = (t == initial) ? " [INITIAL GAME OBJECT]" : "";
 
-            // Récupère tous les composants sauf Transform
             Component[] components = t.GetComponents<Component>();
             string componentList = string.Join(", ",
                 components

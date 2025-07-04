@@ -104,7 +104,7 @@ namespace SomeEmotesREPO
                 if (playerVisuals == null)
                 {
                     playerVisuals = playerAvatar.transform.parent.GetComponentInChildren<PlayerAvatarVisuals>();
-                    animator = playerVisuals.animator;//nvm repo lib is here
+                    animator = playerVisuals.GetComponentInChildren<Animator>();//ofc it is bugged
                 }
             }
 
